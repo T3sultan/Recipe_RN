@@ -3,9 +3,8 @@ import {
       TextInput,
       StyleSheet, Text, View, FlatList, Image, ScrollView, Dimensions, TouchableOpacity
 } from 'react-native';
-// import {  } from 'react-native-gesture-handler';
-// import Cards from '../components/Cards';
-// import Cards from './src/components/Cards';
+import React ,{useState}from 'react';
+
 import Cards from '../components/Cards';
 
 
@@ -441,6 +440,8 @@ const RECIPES = [
 ];
 
 export default function Home({ navigation }) {
+      const [matchInput, setMatchInput] = useState(RECIPES)
+
       console.log(height, width)
 
       // const renderItem = ({ item, index }) => {
@@ -474,6 +475,23 @@ export default function Home({ navigation }) {
 
       }
 
+      // const handleSearch = event => {
+      //       const searchValue = event.target.value.toLowerCase();
+      //       const matchEployee = employees.filter(employee => employee.name.toLowerCase().includes(searchValue))
+      //       setMatchEmployee(matchEployee)
+
+      // }
+//Search Item 
+      const searchFilterFunction = (text) => {
+            console.log("Text", text);
+            const filterList = RECIPES.filter(item => {
+                  const itemData = item.name.toUpperCase();
+                  const userTypeData = text.toUpperCase();
+                  return itemData.indexOf(userTypeData) > -1;
+            });
+            setMatchInput(filterList)
+
+      }
 
 
       return (
@@ -511,7 +529,7 @@ export default function Home({ navigation }) {
 
                   <FlatList
                         // horizontal
-                        data={RECIPES}
+                        data={matchInput}
                         renderItem={renderItemColums}
                         keyExtractor={(item) => item.name}
                         style={styles.styling}
@@ -521,6 +539,10 @@ export default function Home({ navigation }) {
                         ListHeaderComponent={<View style={{ marginBottom: 20 }}>
 
                               <TextInput
+                                    onChangeText={(text) => {
+                                          searchFilterFunction(text)
+
+                                    }}
                                     placeholder='Search by recipe'
                                     style={{
                                           height: 40,
